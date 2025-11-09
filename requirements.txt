@@ -12,3 +12,5 @@ pyodbc==5.0.1
 cx-Oracle==8.3.0
 Werkzeug==3.0.1
 plotly==5.17.0
+gunicorn==21.2.0
+

@@ -1,7 +1,7 @@
 Flask==3.0.0
 pandas==2.1.4
-numpy==1.26.2
-scikit-learn==1.3.2
+numpy==1.25.2   # 1.26.x may still fail
+scikit-learn==1.2.2  # latest 1.3.x may need Python 3.13
 sqlalchemy==2.0.23
 rapidfuzz==3.5.2
 openpyxl==3.1.2

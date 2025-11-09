@@ -1,0 +1,6 @@
+name,age,price,date
+John,25,100.50,2023-01-01
+Jane,thirty,200.00,2023-02-01
+Bob,35,-50.00,invalid_date
+Alice,150,300.00,2023-03-01
+Charlie,28,abc,2023-04-01

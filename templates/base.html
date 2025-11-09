@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PakData - Enterprise Data Cleaning{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f4ff',
+                            100: '#e0eaff',
+                            200: '#c7d7fe',
+                            300: '#a5b8fc',
+                            400: '#8191f8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        secondary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+        
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #4f46e5 #1e293b;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-gray-100">
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-lg border-b border-purple-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">PakData</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-1">
+                    <a href="/" class="px-4 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">Home</a>
+                    <a href="/learn" class="px-4 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/learn' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">Learn</a>
+                    <a href="/app" class="px-4 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/app' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">App</a>
+                    <a href="/about" class="px-4 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/about' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">About</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-lg border-t border-purple-500/20">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" class="block px-3 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">Home</a>
+                <a href="/learn" class="block px-3 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/learn' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">Learn</a>
+                <a href="/app" class="block px-3 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/app' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">App</a>
+                <a href="/about" class="block px-3 py-2 rounded-lg hover:bg-white/10 transition-all {% if request.path == '/about' %}bg-white/10 text-primary-400{% else %}text-gray-300{% endif %}">About</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="pt-16">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-slate-900/50 border-t border-purple-500/20 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-primary-400">PakData</h3>
+                    <p class="text-gray-400 text-sm">Enterprise-grade data cleaning and preparation solution for Pakistan.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-primary-400">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/" class="text-gray-400 hover:text-primary-400 transition-colors">Home</a></li>
+                        <li><a href="/learn" class="text-gray-400 hover:text-primary-400 transition-colors">Learn</a></li>
+                        <li><a href="/app" class="text-gray-400 hover:text-primary-400 transition-colors">App</a></li>
+                        <li><a href="/about" class="text-gray-400 hover:text-primary-400 transition-colors">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-primary-400">Contact</h3>
+                    <p class="text-gray-400 text-sm">Email: hello.noorrehman@gmail.com</a></p>
+                    <p class="text-gray-400 text-sm">Privacy Policy | Terms of Service</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-purple-500/20 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 PakData. All rights reserved. Data processed securely on-premise.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

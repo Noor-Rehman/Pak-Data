@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}PakData - Precision Data, Empowered Decisions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-900/20 via-secondary-900/20 to-slate-900/20"></div>
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="animate-fade-in-up">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent leading-tight">
+                Pak-Data
+            </h1>
+            <p class="text-2xl md:text-3xl font-semibold text-gray-200 mb-4">
+                Precision Data, Empowered Decisions for Pakistan
+            </p>
+            <p class="text-lg md:text-xl text-gray-400 mb-12 max-w-3xl mx-auto">
+                Transforming Complex Datasets into Reliable Insights, Securely and Efficiently
+            </p>
+            
+            <a href="/app" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/50 transition-all transform hover:scale-105 hover:shadow-xl hover:shadow-primary-500/70">
+                <span>Launch DataClean Pro</span>
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+    </div>
+</section>
+
+<!-- Problem Statement Section -->
+<section class="py-20 bg-slate-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">The Challenge We Address</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-primary-500 to-secondary-500 mx-auto"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="bg-gradient-to-br from-red-900/20 to-orange-900/20 border border-red-500/30 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-red-400 mb-4">Pakistan Bureau of Statistics Case Study</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">
+                        The Pakistan Bureau of Statistics faced extensive delays in data cleaning for national projects, including the Census 2022, which was completed in late 2024 due to reliance on manual, labor-intensive processes.
+                    </p>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-400 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Significant resource drain on national budget</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-400 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Delayed insights impacting policy-making</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-400 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Broader implications for national development</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div>
+                
+                <div class="bg-gradient-to-br from-primary-900/20 to-secondary-900/20 border border-primary-500/30 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-primary-400 mb-4">The DataClean Pro Solution</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        A sophisticated, automated solution designed to address critical data quality challenges head-on, empowering organizations to make faster, more accurate decisions.
+                    </p>
+                    <div class="flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-5xl font-bold text-primary-400 mb-2">2+ Years</div>
+                            <div class="text-gray-400">Time Saved</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">Core Benefits</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-primary-500 to-secondary-500 mx-auto"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 hover:border-primary-500/50 transition-all hover:shadow-xl hover:shadow-primary-500/20 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Accelerated Insight Generation</h3>
+                <p class="text-gray-400">Transform weeks of manual work into hours of automated processing, delivering insights when they matter most.</p>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 hover:border-primary-500/50 transition-all hover:shadow-xl hover:shadow-primary-500/20 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Enhanced Data Accuracy</h3>
+                <p class="text-gray-400">Advanced algorithms ensure data reliability, eliminating human error and inconsistencies.</p>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 hover:border-primary-500/50 transition-all hover:shadow-xl hover:shadow-primary-500/20 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Reduced Manual Effort</h3>
+                <p class="text-gray-400">Free your team from tedious data cleaning tasks to focus on strategic analysis and decision-making.</p>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 hover:border-primary-500/50 transition-all hover:shadow-xl hover:shadow-primary-500/20 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Data-Driven Decisions</h3>
+                <p class="text-gray-400">Empower leadership with clean, reliable data for confident strategic planning and execution.</p>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 hover:border-primary-500/50 transition-all hover:shadow-xl hover:shadow-primary-500/20 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Unwavering Security</h3>
+                <p class="text-gray-400">All data processing occurs on-premise. Your sensitive data never leaves your infrastructure.</p>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 hover:border-primary-500/50 transition-all hover:shadow-xl hover:shadow-primary-500/20 transform hover:-translate-y-2">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3">Enterprise-Grade Tools</h3>
+                <p class="text-gray-400">Professional-grade algorithms and methodologies trusted by data scientists worldwide.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Impact Metrics Section -->
+<section class="py-20 bg-slate-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">Measurable Impact</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-primary-500 to-secondary-500 mx-auto"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="text-6xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-4">95%</div>
+                <div class="text-xl text-gray-300 font-semibold mb-2">Faster Processing</div>
+                <div class="text-gray-400">Compared to manual methods</div>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-6xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-4">99%</div>
+                <div class="text-xl text-gray-300 font-semibold mb-2">Error Reduction</div>
+                <div class="text-gray-400">Through automated validation</div>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-6xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-4">100%</div>
+                <div class="text-xl text-gray-300 font-semibold mb-2">Data Readiness</div>
+                <div class="text-gray-400">Production-ready outputs</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">Ready to Transform Your Data?</h2>
+        <p class="text-xl text-gray-400 mb-12">Join organizations across Pakistan in revolutionizing their data workflows.</p>
+        <a href="/app" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/50 transition-all transform hover:scale-105 hover:shadow-xl hover:shadow-primary-500/70">
+            <span>Get Started Now</span>
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+        </a>
+    </div>
+</section>
+
+<style>
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in-up {
+        animation: fade-in-up 1s ease-out;
+    }
+</style>
+{% endblock %}

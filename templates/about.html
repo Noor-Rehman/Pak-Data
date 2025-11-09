@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}About - PakData{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
+                About PakData
+            </h1>
+            <p class="text-xl text-gray-400">Enterprise Data Cleaning for Pakistan's Future</p>
+        </div>
+
+        <div class="space-y-8">
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-white mb-4">Our Mission</h2>
+                <p class="text-gray-300 leading-relaxed">
+                    PakData is dedicated to revolutionizing data management in Pakistan by providing enterprise-grade, secure, and efficient data cleaning solutions. We empower organizations to transform raw data into reliable insights, enabling faster decision-making and driving national development.
+                </p>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-white mb-4">Why PakData?</h2>
+                <ul class="space-y-4 text-gray-300">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-primary-400 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span><strong class="text-white">On-Premise Security:</strong> All data processing occurs locally on your infrastructure. Your sensitive data never leaves your control.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-primary-400 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span><strong class="text-white">Advanced Algorithms:</strong> Leveraging cutting-edge machine learning techniques for superior data quality.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-primary-400 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span><strong class="text-white">Comprehensive Features:</strong> From missing value imputation to fuzzy duplicate detection, we handle all data quality challenges.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-primary-400 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span><strong class="text-white">User-Friendly:</strong> Professional interface designed for both technical and non-technical users.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-white mb-4">Contact Us</h2>
+                <div class="space-y-3 text-gray-300">
+                    <p><strong class="text-white">Name:</strong> Noor Rehman</p>
+                    <p><strong class="text-white">Email:</strong> hello.noorrehman@gmail.com</p>
+                    <p><strong class="text-white">Address:</strong> Islamabad, Pakistan</p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-primary-900/20 to-secondary-900/20 border border-primary-500/30 rounded-2xl p-8 text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
+                <p class="text-gray-300 mb-6">Transform your data workflow today with PakData</p>
+                <a href="/app" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/50 transition-all transform hover:scale-105">
+                    <span>Launch Application</span>
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

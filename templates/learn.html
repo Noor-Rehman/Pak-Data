@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Learn - Data Cleaning Methodology | PakData{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
+                Understanding Data Integrity
+            </h1>
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                The DataClean Pro Methodology: Advanced techniques for ensuring data quality in modern analytics
+            </p>
+        </div>
+
+        <!-- Introduction -->
+        <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8 mb-12">
+            <h2 class="text-3xl font-bold text-white mb-4">The Importance of Data Quality</h2>
+            <p class="text-gray-300 leading-relaxed mb-4">
+                In the era of data-driven decision-making, the quality of your data directly impacts the reliability of your insights. Poor data quality leads to flawed analysis, misguided strategies, and costly mistakes. DataClean Pro employs sophisticated algorithms and proven methodologies to ensure your data meets the highest standards of accuracy and consistency.
+            </p>
+            <p class="text-gray-300 leading-relaxed">
+                Our comprehensive approach addresses the most common data quality challenges: missing values, outliers, duplicates, and inconsistencies, transforming raw data into reliable, analysis-ready datasets.
+            </p>
+        </div>
+
+        <!-- Workflow Diagram -->
+        <div class="bg-gradient-to-br from-primary-900/20 to-secondary-900/20 border border-primary-500/30 rounded-2xl p-8 mb-12">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">DataClean Pro Workflow</h2>
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+                <div class="flex-1 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">1</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Secure Ingestion</h3>
+                    <p class="text-gray-400 text-sm">Upload data or connect to databases</p>
+                </div>
+                <div class="hidden md:block text-primary-400">→</div>
+                <div class="flex-1 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">2</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Data Profiling</h3>
+                    <p class="text-gray-400 text-sm">Automated quality assessment</p>
+                </div>
+                <div class="hidden md:block text-primary-400">→</div>
+                <div class="flex-1 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">3</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Configuration</h3>
+                    <p class="text-gray-400 text-sm">User-guided cleaning rules</p>
+                </div>
+                <div class="hidden md:block text-primary-400">→</div>
+                <div class="flex-1 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">4</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Transformation</h3>
+                    <p class="text-gray-400 text-sm">Intelligent cleaning execution</p>
+                </div>
+                <div class="hidden md:block text-primary-400">→</div>
+                <div class="flex-1 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">5</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Output</h3>
+                    <p class="text-gray-400 text-sm">Reliable, clean data</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modules -->
+        <div class="space-y-12">
+            <!-- Missing Values -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-primary-400 mb-6">Missing Value Management</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    Missing data is one of the most common challenges in data analysis. DataClean Pro employs sophisticated imputation techniques to handle different types of missingness.
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">KNN Imputation</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            K-Nearest Neighbors imputation identifies similar records based on other features and uses their values to estimate missing data. This method preserves relationships within the data and is particularly effective for numerical features.
+                        </p>
+                        <div class="text-primary-400 text-sm font-mono">
+                            Find k similar records → Calculate weighted average → Impute missing value
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Statistical Methods</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Simple yet effective approaches including mean, median, and mode imputation. These methods are computationally efficient and work well when data is missing completely at random (MCAR).
+                        </p>
+                        <ul class="text-gray-400 text-sm space-y-1">
+                            <li>• Mean: For normally distributed data</li>
+                            <li>• Median: For skewed distributions</li>
+                            <li>• Mode: For categorical variables</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-primary-900/20 border border-primary-500/30 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-primary-400 mb-3">Logical NULL Pattern Learning</h3>
+                    <p class="text-gray-400 text-sm">
+                        Our advanced feature learns conditional null patterns from clean sample data. This distinguishes between expected nulls (e.g., "spouse name" for unmarried individuals) and unexpected missing values, ensuring intelligent handling of domain-specific null scenarios.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Outliers -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-primary-400 mb-6">Outlier Detection & Handling</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    Outliers can significantly skew analysis results. DataClean Pro offers multiple detection algorithms to identify anomalies based on your data characteristics.
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Isolation Forest</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            An ensemble method that isolates anomalies by randomly partitioning the data. Outliers are easier to isolate and require fewer partitions, making this method highly efficient for high-dimensional data.
+                        </p>
+                        <div class="text-xs text-primary-400 font-mono">Contamination: 0.1 (10% outliers)</div>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Local Outlier Factor</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            LOF identifies outliers by measuring local density deviation. Points that are significantly less dense than their neighbors are flagged as anomalies, making it effective for datasets with varying density.
+                        </p>
+                        <div class="text-xs text-primary-400 font-mono">Neighbors: 20</div>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">DBSCAN</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Density-Based Spatial Clustering identifies outliers as noise points that don't belong to any cluster. Effective for spatial data and datasets with non-spherical cluster shapes.
+                        </p>
+                        <div class="text-xs text-primary-400 font-mono">eps: 0.5, min_samples: 5</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duplicates -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-primary-400 mb-6">Duplicate Record Management</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    Duplicate records inflate dataset size and skew analysis. DataClean Pro identifies and handles three types of duplicates with precision.
+                </p>
+                
+                <div class="space-y-4">
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Exact Duplicates</h3>
+                        <p class="text-gray-400 text-sm">
+                            Rows with identical values across all columns. These are straightforward to detect and remove, ensuring each unique record appears only once.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Partial Duplicates</h3>
+                        <p class="text-gray-400 text-sm">
+                            Records that match on specific key columns (e.g., customer ID, email). You define which columns determine uniqueness, allowing flexible duplicate detection based on business logic.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Near Duplicates (Fuzzy Matching)</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Records with slight variations due to typos, formatting differences, or data entry errors. Using advanced string similarity algorithms (Levenshtein distance), DataClean Pro identifies and standardizes near-matches.
+                        </p>
+                        <div class="bg-primary-900/20 border border-primary-500/30 rounded p-3 text-sm">
+                            <div class="text-gray-400 mb-2">Example:</div>
+                            <div class="text-primary-400 font-mono">"Muhammad Ali" ≈ "Muhammed Ali" (similarity: 95%)</div>
+                            <div class="text-primary-400 font-mono">"Karachi" ≈ "Karachii" (similarity: 92%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Erroneous Values -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-primary-400 mb-6">Erroneous Values & Data Inconsistencies</h2>
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    Data inconsistencies arise from various sources: manual entry errors, system migrations, or integration issues. DataClean Pro provides comprehensive tools to detect and correct these problems.
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Data Type Validation</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Automatically detect and convert data types, flagging values that cannot be converted. Ensures numerical columns contain only numbers, dates are properly formatted, and categorical variables are consistent.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Domain Constraints</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Define business rules to validate data against expected ranges and values. For example, age must be between 0-120, or status must be one of predefined categories.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Format Standardization</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Normalize text case, date formats, and numeric representations. Ensures consistency across the dataset for reliable analysis and reporting.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Value Standardization</h3>
+                        <p class="text-gray-400 text-sm mb-3">
+                            Map synonyms and aliases to standard values. For example, "USA", "United States", and "US" all map to a single standardized value, ensuring consistency in categorical data.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-16 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Apply These Techniques?</h2>
+            <a href="/app" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/50 transition-all transform hover:scale-105">
+                <span>Launch DataClean Pro</span>
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

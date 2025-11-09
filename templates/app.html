@@ -1,0 +1,1247 @@
+{% extends "base.html" %}
+
+{% block title %}DataClean Pro - Your Secure Data Workspace{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-20" x-data="dataCleanApp()">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
+                DataClean Pro Workspace
+            </h1>
+            <p class="text-gray-400">Secure, on-premise data cleaning and transformation</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mb-8">
+            <div class="flex flex-wrap gap-2 border-b border-primary-500/20">
+                <button @click="activeTab = 'ingest'" :class="activeTab === 'ingest' ? 'bg-primary-600 text-white' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-6 py-3 rounded-t-lg transition-all">
+                    Data Ingestion
+                </button>
+                <button @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'bg-primary-600 text-white' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-6 py-3 rounded-t-lg transition-all" :disabled="!dataLoaded">
+                    Data Profiling
+                </button>
+                <button @click="activeTab = 'clean'" :class="activeTab === 'clean' ? 'bg-primary-600 text-white' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-6 py-3 rounded-t-lg transition-all" :disabled="!dataLoaded">
+                    Cleaning Operations
+                </button>
+                <button @click="activeTab = 'transform'" :class="activeTab === 'transform' ? 'bg-primary-600 text-white' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-6 py-3 rounded-t-lg transition-all" :disabled="!dataLoaded">
+                    Transform & Output
+                </button>
+                <button @click="activeTab = 'insights'" :class="activeTab === 'insights' ? 'bg-primary-600 text-white' : 'bg-slate-800/50 text-gray-400 hover:text-white'" class="px-6 py-3 rounded-t-lg transition-all" :disabled="!dataLoaded">
+                    Data Insights & Quality
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Data Ingestion -->
+        <div x-show="activeTab === 'ingest'" class="space-y-8">
+            <!-- File Upload -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Upload Data File</h2>
+                <div class="border-2 border-dashed border-primary-500/30 rounded-xl p-12 text-center hover:border-primary-500/50 transition-all cursor-pointer" id="dropzone">
+                    <svg class="w-16 h-16 text-primary-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    <p class="text-gray-300 mb-2">Drag and drop your CSV or Excel file here</p>
+                    <p class="text-gray-500 text-sm mb-4">or</p>
+                    <label class="inline-flex items-center px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-lg cursor-pointer transition-all">
+                        <span>Browse Files</span>
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" class="hidden" @change="uploadFile">
+                    </label>
+                    <p class="text-gray-500 text-sm mt-4">No file size limit • Supported formats: CSV, Excel</p>
+                </div>
+                <div x-show="uploadProgress > 0" class="mt-4">
+                    <div class="bg-slate-900/50 rounded-full h-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-primary-500 to-secondary-500 h-full transition-all" :style="`width: ${uploadProgress}%`"></div>
+                    </div>
+                    <p class="text-center text-gray-400 text-sm mt-2" x-text="`Uploading: ${uploadProgress}%`"></p>
+                </div>
+            </div>
+
+            <!-- Clean Sample Upload -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-4">Upload Clean Sample (Optional)</h2>
+                <p class="text-gray-400 mb-6 text-sm">Upload a clean sample dataset to enable logical NULL pattern learning</p>
+                <label class="inline-flex items-center px-6 py-3 bg-secondary-600 hover:bg-secondary-500 text-white rounded-lg cursor-pointer transition-all">
+                    <span>Upload Clean Sample</span>
+                    <input type="file" id="cleanSampleInput" accept=".csv,.xlsx,.xls" class="hidden" @change="uploadCleanSample">
+                </label>
+            </div>
+
+            <!-- Database Connection -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Database Connection</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Database Type</label>
+                        <select x-model="dbConfig.db_type" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="postgresql">PostgreSQL</option>
+                            <option value="mysql">MySQL</option>
+                            <option value="sqlserver">SQL Server</option>
+                            <option value="sqlite">SQLite</option>
+                            <option value="oracle">Oracle</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Host</label>
+                        <input type="text" x-model="dbConfig.host" placeholder="localhost" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Port</label>
+                        <input type="text" x-model="dbConfig.port" placeholder="5432" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Database Name</label>
+                        <input type="text" x-model="dbConfig.database" placeholder="mydb" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">User</label>
+                        <input type="text" x-model="dbConfig.user" placeholder="username" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Password</label>
+                        <input type="password" x-model="dbConfig.password" placeholder="••••••••" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                </div>
+                <button @click="connectDatabase" class="mt-6 px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-all">
+                    <span x-show="!dbConnecting">Secure Connect</span>
+                    <span x-show="dbConnecting">Connecting...</span>
+                </button>
+                
+                <div x-show="dbTables.length > 0" class="mt-6">
+                    <label class="block text-gray-300 mb-2 text-sm">Select Tables</label>
+                    <select x-model="selectedTables" multiple class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none h-32">
+                        <template x-for="table in dbTables" :key="table">
+                            <option :value="table" x-text="table"></option>
+                        </template>
+                    </select>
+                    <button @click="loadTables" class="mt-4 px-6 py-3 bg-secondary-600 hover:bg-secondary-500 text-white rounded-lg transition-all">
+                        Load Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Overview -->
+            <div x-show="dataLoaded" class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Data Overview</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-primary-400" x-text="overview.total_rows"></div>
+                        <div class="text-gray-400 text-sm mt-2">Total Rows</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-primary-400" x-text="overview.total_columns"></div>
+                        <div class="text-gray-400 text-sm mt-2">Total Columns</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-secondary-400" x-text="overview.total_missing"></div>
+                        <div class="text-gray-400 text-sm mt-2">Missing Values</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-secondary-400" x-text="overview.duplicate_rows"></div>
+                        <div class="text-gray-400 text-sm mt-2">Duplicate Rows</div>
+                    </div>
+                </div>
+                <div class="bg-primary-900/20 border border-primary-500/30 rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-lg font-semibold text-white">Data Quality Assessment</div>
+                            <div class="text-gray-400 text-sm mt-1">Based on completeness and duplication</div>
+                        </div>
+                        <div class="text-3xl font-bold" :class="{
+                            'text-green-400': overview.data_quality === 'Excellent',
+                            'text-blue-400': overview.data_quality === 'Good',
+                            'text-yellow-400': overview.data_quality === 'Fair',
+                            'text-red-400': overview.data_quality === 'Poor'
+                        }" x-text="overview.data_quality"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Data Profiling -->
+        <div x-show="activeTab === 'profile'" class="space-y-8">
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Column Selection & Type Management</h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm font-semibold">Numerical Columns</label>
+                        <div class="bg-slate-900/50 rounded-lg p-4 max-h-48 overflow-y-auto">
+                            <template x-for="col in overview.num_col_names" :key="col">
+                                <div class="text-gray-300 py-1" x-text="col"></div>
+                            </template>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm font-semibold">Categorical Columns</label>
+                        <div class="bg-slate-900/50 rounded-lg p-4 max-h-48 overflow-y-auto">
+                            <template x-for="col in overview.cat_col_names" :key="col">
+                                <div class="text-gray-300 py-1" x-text="col"></div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-semibold text-white mb-4">Data Type Conversion</h3>
+                <p class="text-gray-400 text-sm mb-4">Convert column data types as needed for proper analysis</p>
+                <div class="bg-slate-900/50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                    <table class="w-full text-sm">
+                        <thead class="border-b border-primary-500/30">
+                            <tr>
+                                <th class="text-left text-gray-300 py-2">Column Name</th>
+                                <th class="text-left text-gray-300 py-2">Current Type</th>
+                                <th class="text-left text-gray-300 py-2">Convert To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(dtype, col) in overview.dtypes" :key="col">
+                                <tr class="border-b border-slate-700/30">
+                                    <td class="py-2 text-gray-300" x-text="col"></td>
+                                    <td class="py-2 text-gray-400" x-text="dtype"></td>
+                                    <td class="py-2">
+                                        <select x-model="typeConversions[col]" class="bg-slate-800 border border-primary-500/30 rounded px-2 py-1 text-white text-xs">
+                                            <option value="">No change</option>
+                                            <option value="integer">Integer</option>
+                                            <option value="float">Float</option>
+                                            <option value="string">String</option>
+                                            <option value="datetime">DateTime</option>
+                                            <option value="boolean">Boolean</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <button @click="applyTypeConversions" class="mt-6 px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-all">
+                    Apply Type Conversions
+                </button>
+            </div>
+
+            <!-- Data Preview -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Raw Data Preview</h2>
+                <div class="bg-slate-900/50 rounded-lg p-4 overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="border-b border-primary-500/30">
+                            <tr>
+                                <template x-for="col in overview.columns" :key="col">
+                                    <th class="text-left text-gray-300 py-2 px-4 whitespace-nowrap" x-text="col"></th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(row, idx) in overview.preview" :key="idx">
+                                <tr class="border-b border-slate-700/30">
+                                    <template x-for="col in overview.columns" :key="col">
+                                        <td class="py-2 px-4 text-gray-400 whitespace-nowrap" x-text="row[col]"></td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Cleaning Operations -->
+        <div x-show="activeTab === 'clean'" class="space-y-8">
+            <!-- Missing Values -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Missing Value Management</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Handling Method</label>
+                        <select x-model="cleanConfig.null_method" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="none">No Action</option>
+                            <option value="remove">Remove Rows with Missing Values</option>
+                            <option value="mean">Fill with Mean</option>
+                            <option value="median">Fill with Median</option>
+                            <option value="mode">Fill with Mode</option>
+                            <option value="interpolate">Interpolate</option>
+                            <option value="knn">KNN Imputation</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="flex items-center text-gray-300 mb-4">
+                            <input type="checkbox" x-model="cleanConfig.enable_null_learning" class="mr-2">
+                            <span class="text-sm">Enable Logical NULL Pattern Learning</span>
+                        </label>
+                        <div x-show="cleanConfig.enable_null_learning" class="space-y-2">
+                            <input type="number" x-model="cleanConfig.null_threshold" placeholder="NULL Threshold (0-1)" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-2 text-white text-sm">
+                            <input type="number" x-model="cleanConfig.min_support" placeholder="Min Support" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-2 text-white text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outliers -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Outlier Detection & Handling</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Detection Method</label>
+                        <select x-model="cleanConfig.outlier_method" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="none">No Action</option>
+                            <option value="zscore">Z-Score</option>
+                            <option value="iqr">IQR</option>
+                            <option value="isolation_forest">Isolation Forest</option>
+                            <option value="lof">Local Outlier Factor</option>
+                            <option value="dbscan">DBSCAN</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Handling Method</label>
+                        <select x-model="cleanConfig.outlier_handling" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="remove">Remove Outliers</option>
+                            <option value="cap">Cap Outliers</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Parameters</label>
+                        <input type="number" x-model="cleanConfig.outlier_param" placeholder="Threshold/Contamination" step="0.1" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duplicates -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Duplicate Record Management</h2>
+                <div class="space-y-4">
+                    <label class="flex items-center text-gray-300">
+                        <input type="checkbox" x-model="cleanConfig.remove_exact_duplicates" class="mr-2">
+                        <span class="text-sm">Remove Exact Duplicate Rows</span>
+                    </label>
+                    <label class="flex items-center text-gray-300">
+                        <input type="checkbox" x-model="cleanConfig.remove_partial_duplicates" class="mr-2">
+                        <span class="text-sm">Remove Partial Duplicates</span>
+                    </label>
+                    <label class="flex items-center text-gray-300">
+                        <input type="checkbox" x-model="cleanConfig.fuzzy_matching" class="mr-2">
+                        <span class="text-sm">Enable Fuzzy Matching for Near Duplicates</span>
+                    </label>
+                    <div x-show="cleanConfig.fuzzy_matching">
+                        <input type="number" x-model="cleanConfig.fuzzy_threshold" placeholder="Similarity Threshold (%)" min="0" max="100" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Cleaning -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Text & Format Cleaning</h2>
+                <div class="space-y-4">
+                    <label class="flex items-center text-gray-300">
+                        <input type="checkbox" x-model="cleanConfig.trim_whitespace" class="mr-2">
+                        <span class="text-sm">Trim Leading/Trailing Whitespace</span>
+                    </label>
+                    <label class="flex items-center text-gray-300">
+                        <input type="checkbox" x-model="cleanConfig.remove_nonprintable" class="mr-2">
+                        <span class="text-sm">Remove Non-Printable Characters</span>
+                    </label>
+                    <label class="flex items-center text-gray-300">
+                        <input type="checkbox" x-model="cleanConfig.normalize_case" class="mr-2">
+                        <span class="text-sm">Normalize Text Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <button @click="cleanData" class="w-full px-6 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white font-semibold rounded-xl transition-all">
+                <span x-show="!cleaning">Apply Cleaning Operations</span>
+                <span x-show="cleaning">Processing...</span>
+            </button>
+        </div>
+
+        <!-- Tab 4: Transform & Output -->
+        <div x-show="activeTab === 'transform'" class="space-y-8">
+            <div x-show="cleaningSummary.log" class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Cleaning Results Summary</h2>
+                <div class="bg-slate-900/50 rounded-lg p-4 mb-4">
+                    <div class="grid md:grid-cols-3 gap-4 mb-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary-400" x-text="cleaningSummary.rows_after"></div>
+                            <div class="text-gray-400 text-sm">Rows After Cleaning</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary-400" x-text="cleaningSummary.columns_after"></div>
+                            <div class="text-gray-400 text-sm">Columns</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-secondary-400" x-text="cleaningSummary.missing_after"></div>
+                            <div class="text-gray-400 text-sm">Missing Values Remaining</div>
+                        </div>
+                    </div>
+                    <div class="border-t border-primary-500/30 pt-4">
+                        <h3 class="text-lg font-semibold text-white mb-2">Operations Applied:</h3>
+                        <ul class="space-y-1">
+                            <template x-for="(item, idx) in cleaningSummary.log" :key="idx">
+                                <li class="text-gray-400 text-sm" x-text="'• ' + item"></li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Cleaned Data Preview</h2>
+                <div class="bg-slate-900/50 rounded-lg p-4 overflow-x-auto max-h-96">
+                    <table class="w-full text-sm">
+                        <thead class="border-b border-primary-500/30 sticky top-0 bg-slate-900">
+                            <tr>
+                                <template x-for="col in overview.columns" :key="col">
+                                    <th class="text-left text-gray-300 py-2 px-4 whitespace-nowrap" x-text="col"></th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(row, idx) in cleaningSummary.preview" :key="idx">
+                                <tr class="border-b border-slate-700/30">
+                                    <template x-for="col in overview.columns" :key="col">
+                                        <td class="py-2 px-4 text-gray-400 whitespace-nowrap" x-text="row[col]"></td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button @click="downloadData" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold rounded-xl shadow-lg transition-all transform hover:scale-105">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    <span>Download Cleaned Data (CSV)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 5: Data Insights & Quality -->
+        <div x-show="activeTab === 'insights'" class="space-y-8">
+            <!-- Data Quality Scores -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Data Quality Assessment</h2>
+                <div class="grid md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-green-400" x-text="insights.completeness_score + '%'"></div>
+                        <div class="text-gray-400 text-sm mt-2">Completeness</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-blue-400" x-text="insights.accuracy_score + '%'"></div>
+                        <div class="text-gray-400 text-sm mt-2">Accuracy</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-yellow-400" x-text="insights.consistency_score + '%'"></div>
+                        <div class="text-gray-400 text-sm mt-2">Consistency</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-bold text-purple-400" x-text="insights.timeliness_score + '%'"></div>
+                        <div class="text-gray-400 text-sm mt-2">Timeliness</div>
+                    </div>
+                </div>
+                <button @click="generateInsights" class="px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-all">
+                    Generate Insights
+                </button>
+            </div>
+
+            <!-- Missing Values Analysis -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Missing Values Analysis</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="text-lg font-semibold text-white mb-2">Total Missing Values</div>
+                        <div class="text-3xl font-bold text-red-400" x-text="insights.missing_analysis.total_missing"></div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="text-lg font-semibold text-white mb-2">Missing Rate</div>
+                        <div class="text-3xl font-bold text-orange-400" x-text="(insights.missing_analysis.missing_rate * 100).toFixed(2) + '%'"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duplicates Analysis -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Duplicates Analysis</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-bold text-red-400" x-text="insights.duplicates_analysis.exact_duplicates"></div>
+                        <div class="text-gray-400 text-sm mt-2">Exact Duplicates</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-bold text-yellow-400" x-text="insights.duplicates_analysis.near_duplicates"></div>
+                        <div class="text-gray-400 text-sm mt-2">Near Duplicates</div>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-bold text-orange-400" x-text="(insights.duplicates_analysis.duplicate_rate * 100).toFixed(2) + '%'"></div>
+                        <div class="text-gray-400 text-sm mt-2">Duplicate Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Generation -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Data Visualization</h2>
+                <div class="grid md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Chart Type</label>
+                        <select x-model="chartConfig.chartType" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                            <option value="scatter">Scatter Plot</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="histogram">Histogram</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">X-Axis Column</label>
+                        <select x-model="chartConfig.xColumn" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="">Select Column</option>
+                            <template x-for="col in overview.columns" :key="col">
+                                <option :value="col" x-text="col"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Y-Axis Column</label>
+                        <select x-model="chartConfig.yColumn" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="">Select Column</option>
+                            <template x-for="col in overview.columns" :key="col">
+                                <option :value="col" x-text="col"></option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+                <button @click="generateChart" class="px-6 py-3 bg-secondary-600 hover:bg-secondary-500 text-white rounded-lg transition-all">
+                    Generate Chart
+                </button>
+                <div id="chartContainer" class="mt-6 bg-slate-900/50 rounded-lg p-4 min-h-96"></div>
+            </div>
+
+            <!-- Paginated Data Preview -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Data Preview with Quality Indicators</h2>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center text-gray-300">
+                            <input type="checkbox" x-model="previewConfig.highlightNulls" class="mr-2">
+                            <span class="text-sm">Highlight NULLs</span>
+                        </label>
+                        <label class="flex items-center text-gray-300">
+                            <input type="checkbox" x-model="previewConfig.highlightDuplicates" class="mr-2">
+                            <span class="text-sm">Highlight Duplicates</span>
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button @click="prevPage" :disabled="previewConfig.page === 1" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded disabled:opacity-50">Prev</button>
+                        <span class="text-gray-300" x-text="`Page ${previewConfig.page} of ${insights.totalPages}`"></span>
+                        <button @click="nextPage" :disabled="previewConfig.page === insights.totalPages" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded disabled:opacity-50">Next</button>
+                    </div>
+                </div>
+                <div class="bg-slate-900/50 rounded-lg p-4 overflow-x-auto max-h-96">
+                    <table class="w-full text-sm">
+                        <thead class="border-b border-primary-500/30 sticky top-0 bg-slate-900">
+                            <tr>
+                                <template x-for="col in overview.columns" :key="col">
+                                    <th class="text-left text-gray-300 py-2 px-4 whitespace-nowrap" x-text="col"></th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(row, idx) in insights.paginatedPreview" :key="idx">
+                                <tr class="border-b border-slate-700/30" :class="{
+                                    'bg-red-900/20': previewConfig.highlightDuplicates && row.is_duplicate,
+                                    'bg-yellow-900/20': previewConfig.highlightNulls && row.has_nulls
+                                }">
+                                    <template x-for="col in overview.columns" :key="col">
+                                        <td class="py-2 px-4 text-gray-400 whitespace-nowrap" :class="{
+                                            'bg-red-900/30': previewConfig.highlightNulls && row[col] === null,
+                                            'text-red-400': previewConfig.highlightNulls && row[col] === null
+                                        }" x-text="row[col] === null ? 'NULL' : row[col]"></td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Expired Values Handling -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Expired Values Management</h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Date Column</label>
+                        <select x-model="expiredConfig.dateColumn" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="">Select Date Column</option>
+                            <template x-for="col in overview.columns" :key="col">
+                                <option :value="col" x-text="col"></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2 text-sm">Action</label>
+                        <select x-model="expiredConfig.action" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                            <option value="remove">Remove Expired</option>
+                            <option value="flag">Flag Expired</option>
+                            <option value="update">Update to Current</option>
+                        </select>
+                    </div>
+                </div>
+                <button @click="handleExpiredValues" class="px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-all">
+                    Process Expired Values
+                </button>
+                <div x-show="insights.expiredResults" class="mt-4 bg-slate-900/50 rounded-lg p-4">
+                    <p class="text-gray-300" x-text="insights.expiredResults"></p>
+                </div>
+            </div>
+
+            <!-- Erroneous Values Detection -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Erroneous Values Detection</h2>
+                <div class="flex space-x-4 mb-6">
+                    <button @click="detectErroneousValues" class="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg transition-all">
+                        Detect Erroneous Values
+                    </button>
+                    <button @click="fixErroneousValues" :disabled="erroneousDetections.length === 0" class="px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all disabled:opacity-50">
+                        Fix Detected Values
+                    </button>
+                </div>
+                <div x-show="erroneousDetections.length > 0" class="bg-slate-900/50 rounded-lg p-4 max-h-48 overflow-y-auto">
+                    <h3 class="text-lg font-semibold text-white mb-2">Detected Erroneous Values:</h3>
+                    <ul class="space-y-1">
+                        <template x-for="(detection, idx) in erroneousDetections" :key="idx">
+                            <li class="text-gray-400 text-sm" x-text="'• ' + detection"></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Inconsistencies Detection -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Data Inconsistencies Detection</h2>
+                <div class="flex space-x-4 mb-6">
+                    <button @click="detectInconsistencies" class="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-all">
+                        Detect Inconsistencies
+                    </button>
+                    <button @click="fixInconsistencies" :disabled="inconsistencyDetections.length === 0" class="px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all disabled:opacity-50">
+                        Fix Inconsistencies
+                    </button>
+                </div>
+                <div x-show="inconsistencyDetections.length > 0" class="bg-slate-900/50 rounded-lg p-4 max-h-48 overflow-y-auto">
+                    <h3 class="text-lg font-semibold text-white mb-2">Detected Inconsistencies:</h3>
+                    <ul class="space-y-1">
+                        <template x-for="(detection, idx) in inconsistencyDetections" :key="idx">
+                            <li class="text-gray-400 text-sm" x-text="'• ' + detection"></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Outlier Visualization -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Outlier Visualization</h2>
+                <button @click="generateOutlierVisualization" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-all">
+                    Generate Outlier Visualization
+                </button>
+                <div id="outlierChartContainer" class="mt-6 bg-slate-900/50 rounded-lg p-4 min-h-96"></div>
+            </div>
+
+            <!-- Data Reshaping -->
+            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-primary-500/20 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Data Reshaping</h2>
+
+                <!-- Pivot Table -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-white mb-4">Pivot Table</h3>
+                    <div class="grid md:grid-cols-3 gap-6 mb-4">
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-sm">Index Column</label>
+                            <select x-model="reshapeConfig.pivotIndex" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                                <option value="">Select Column</option>
+                                <template x-for="col in overview.columns" :key="col">
+                                    <option :value="col" x-text="col"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-sm">Columns</label>
+                            <select x-model="reshapeConfig.pivotColumns" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                                <option value="">Select Column</option>
+                                <template x-for="col in overview.columns" :key="col">
+                                    <option :value="col" x-text="col"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-sm">Values</label>
+                            <select x-model="reshapeConfig.pivotValues" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                                <option value="">Select Column</option>
+                                <template x-for="col in overview.columns" :key="col">
+                                    <option :value="col" x-text="col"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                    <button @click="applyPivot" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all">
+                        Apply Pivot
+                    </button>
+                </div>
+
+                <!-- Group By -->
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-4">Group By Aggregation</h3>
+                    <div class="grid md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-sm">Group By Columns</label>
+                            <input type="text" x-model="reshapeConfig.groupByColumns" placeholder="col1,col2" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-sm">Aggregation Functions</label>
+                            <input type="text" x-model="reshapeConfig.aggFunctions" placeholder="mean,sum,count" class="w-full bg-slate-900/50 border border-primary-500/30 rounded-lg px-4 py-3 text-white focus:border-primary-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <button @click="applyGroupBy" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-all">
+                        Apply Group By
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div x-show="message" class="fixed bottom-8 right-8 bg-slate-800 border border-primary-500/50 rounded-xl p-4 shadow-xl max-w-md" x-transition>
+            <p class="text-white" x-text="message"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+function dataCleanApp() {
+    return {
+        activeTab: 'ingest',
+        dataLoaded: false,
+        uploadProgress: 0,
+        message: '',
+        dbConnecting: false,
+        cleaning: false,
+        
+        dbConfig: {
+            db_type: 'postgresql',
+            host: '',
+            port: '',
+            database: '',
+            user: '',
+            password: ''
+        },
+        
+        dbTables: [],
+        selectedTables: [],
+        
+        typeConversions: {},
+
+        overview: {
+            total_rows: 0,
+            total_columns: 0,
+            numerical_columns: 0,
+            categorical_columns: 0,
+            total_missing: 0,
+            duplicate_rows: 0,
+            memory_usage_mb: 0,
+            data_quality: '',
+            num_col_names: [],
+            cat_col_names: [],
+            preview: [],
+            columns: [],
+            dtypes: {}
+        },
+        
+        cleanConfig: {
+            null_method: 'none',
+            enable_null_learning: false,
+            null_threshold: 0.8,
+            min_support: 10,
+            outlier_method: 'none',
+            outlier_handling: 'remove',
+            outlier_param: 3,
+            remove_exact_duplicates: false,
+            remove_partial_duplicates: false,
+            fuzzy_matching: false,
+            fuzzy_threshold: 80,
+            trim_whitespace: false,
+            remove_nonprintable: false,
+            normalize_case: false
+        },
+        
+        cleaningSummary: {
+            rows_after: 0,
+            columns_after: 0,
+            missing_after: 0,
+            log: [],
+            preview: []
+        },
+
+        insights: {
+            completeness_score: 0,
+            accuracy_score: 0,
+            consistency_score: 0,
+            timeliness_score: 0,
+            missing_analysis: {
+                total_missing: 0,
+                missing_rate: 0
+            },
+            duplicates_analysis: {
+                exact_duplicates: 0,
+                near_duplicates: 0,
+                duplicate_rate: 0
+            },
+            paginatedPreview: [],
+            totalPages: 1,
+            expiredResults: ''
+        },
+
+        chartConfig: {
+            chartType: 'bar',
+            xColumn: '',
+            yColumn: ''
+        },
+
+        previewConfig: {
+            highlightNulls: false,
+            highlightDuplicates: false,
+            pageSize: 25,
+            page: 1
+        },
+
+        expiredConfig: {
+            dateColumn: '',
+            action: 'remove'
+        },
+
+        erroneousDetections: [],
+        inconsistencyDetections: [],
+
+        reshapeConfig: {
+            pivotIndex: '',
+            pivotColumns: '',
+            pivotValues: '',
+            groupByColumns: '',
+            aggFunctions: ''
+        },
+        
+        async uploadFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            this.uploadProgress = 0;
+            const interval = setInterval(() => {
+                if (this.uploadProgress < 90) this.uploadProgress += 10;
+            }, 100);
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                clearInterval(interval);
+                this.uploadProgress = 100;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.overview = data;
+                    this.dataLoaded = true;
+                    this.showMessage('File uploaded successfully!');
+                    setTimeout(() => this.uploadProgress = 0, 1000);
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error: ' + error.error);
+                }
+            } catch (error) {
+                clearInterval(interval);
+                this.showMessage('Upload failed: ' + error.message);
+            }
+        },
+        
+        async uploadCleanSample(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/upload_clean_sample', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.showMessage('Clean sample uploaded successfully!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Upload failed: ' + error.message);
+            }
+        },
+        
+        async connectDatabase() {
+            this.dbConnecting = true;
+            try {
+                const response = await fetch('/connect_database', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(this.dbConfig)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.dbTables = data.tables;
+                    this.showMessage('Database connected successfully!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Connection failed: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Connection failed: ' + error.message);
+            }
+            this.dbConnecting = false;
+        },
+        
+        async loadTables() {
+            try {
+                const response = await fetch('/load_tables', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({tables: this.selectedTables})
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.overview = data;
+                    this.dataLoaded = true;
+                    this.showMessage(data.join_info || 'Data loaded successfully!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Load failed: ' + error.message);
+            }
+        },
+        
+        async cleanData() {
+            this.cleaning = true;
+            try {
+                const response = await fetch('/clean_data', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(this.cleanConfig)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.cleaningSummary = data;
+                    this.showMessage('Data cleaned successfully!');
+                    this.activeTab = 'transform';
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Cleaning failed: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Cleaning failed: ' + error.message);
+            }
+            this.cleaning = false;
+        },
+        
+        async downloadData() {
+            window.location.href = '/download';
+        },
+        
+        showMessage(msg) {
+            this.message = msg;
+            setTimeout(() => this.message = '', 5000);
+        },
+
+        async generateInsights() {
+            try {
+                const response = await fetch('/generate_insights', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({data: this.overview})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.insights = { ...this.insights, ...data };
+                    this.insights.paginatedPreview = this.paginateData(this.insights.paginatedPreview || [], this.previewConfig.pageSize, this.previewConfig.page);
+                    this.showMessage('Insights generated successfully!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error generating insights: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to generate insights: ' + error.message);
+            }
+        },
+
+        async generateChart() {
+            if (!this.chartConfig.xColumn || !this.chartConfig.yColumn) {
+                this.showMessage('Please select both X and Y columns');
+                return;
+            }
+
+            try {
+                const response = await fetch('/generate_chart', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chartType: this.chartConfig.chartType,
+                        xColumn: this.chartConfig.xColumn,
+                        yColumn: this.chartConfig.yColumn
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    Plotly.newPlot('chartContainer', data.data, data.layout);
+                    this.showMessage('Chart generated successfully!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error generating chart: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to generate chart: ' + error.message);
+            }
+        },
+
+        paginateData(data, pageSize, page) {
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+            return data.slice(start, end);
+        },
+
+        prevPage() {
+            if (this.previewConfig.page > 1) {
+                this.previewConfig.page--;
+                this.updatePaginatedPreview();
+            }
+        },
+
+        nextPage() {
+            if (this.previewConfig.page < this.insights.totalPages) {
+                this.previewConfig.page++;
+                this.updatePaginatedPreview();
+            }
+        },
+
+        updatePaginatedPreview() {
+            // This would need to be implemented to fetch paginated data from backend
+            // For now, we'll assume the data is already loaded
+            this.insights.paginatedPreview = this.paginateData(this.insights.paginatedPreview || [], this.previewConfig.pageSize, this.previewConfig.page);
+        },
+
+        async handleExpiredValues() {
+            if (!this.expiredConfig.dateColumn) {
+                this.showMessage('Please select a date column');
+                return;
+            }
+
+            try {
+                const response = await fetch('/handle_expired_values', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(this.expiredConfig)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.insights.expiredResults = data.message;
+                    this.showMessage('Expired values processed successfully!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error processing expired values: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to process expired values: ' + error.message);
+            }
+        },
+
+        async detectErroneousValues() {
+            try {
+                const response = await fetch('/detect_erroneous_values', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.erroneousDetections = data.detections;
+                    this.showMessage('Erroneous values detected!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error detecting erroneous values: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to detect erroneous values: ' + error.message);
+            }
+        },
+
+        async fixErroneousValues() {
+            try {
+                const response = await fetch('/fix_erroneous_values', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.showMessage('Erroneous values fixed successfully!');
+                    this.erroneousDetections = [];
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error fixing erroneous values: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to fix erroneous values: ' + error.message);
+            }
+        },
+
+        async detectInconsistencies() {
+            try {
+                const response = await fetch('/detect_inconsistencies', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.inconsistencyDetections = data.detections;
+                    this.showMessage('Inconsistencies detected!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error detecting inconsistencies: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to detect inconsistencies: ' + error.message);
+            }
+        },
+
+        async fixInconsistencies() {
+            try {
+                const response = await fetch('/fix_inconsistencies', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.showMessage('Inconsistencies fixed successfully!');
+                    this.inconsistencyDetections = [];
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error fixing inconsistencies: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to fix inconsistencies: ' + error.message);
+            }
+        },
+
+        async generateOutlierVisualization() {
+            try {
+                const response = await fetch('/generate_outlier_visualization', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    Plotly.newPlot('outlierChartContainer', data.data, data.layout);
+                    this.showMessage('Outlier visualization generated!');
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error generating outlier visualization: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to generate outlier visualization: ' + error.message);
+            }
+        },
+
+        async applyPivot() {
+            if (!this.reshapeConfig.pivotIndex || !this.reshapeConfig.pivotColumns || !this.reshapeConfig.pivotValues) {
+                this.showMessage('Please fill all pivot fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('/apply_pivot', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(this.reshapeConfig)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.showMessage('Pivot applied successfully!');
+                    // Update overview with new data structure
+                    this.overview = { ...this.overview, ...data.overview };
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error applying pivot: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to apply pivot: ' + error.message);
+            }
+        },
+
+        async applyTypeConversions() {
+            try {
+                const response = await fetch('/convert_types', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({conversions: this.typeConversions})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.showMessage('Type conversions applied successfully!');
+                    // Update dtypes in overview
+                    this.overview.dtypes = data.dtypes;
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error applying conversions: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to apply type conversions: ' + error.message);
+            }
+        },
+
+        async applyGroupBy() {
+            if (!this.reshapeConfig.groupByColumns || !this.reshapeConfig.aggFunctions) {
+                this.showMessage('Please fill group by fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('/apply_groupby', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(this.reshapeConfig)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.showMessage('Group by applied successfully!');
+                    // Update overview with new data structure
+                    this.overview = { ...this.overview, ...data.overview };
+                } else {
+                    const error = await response.json();
+                    this.showMessage('Error applying group by: ' + error.error);
+                }
+            } catch (error) {
+                this.showMessage('Failed to apply group by: ' + error.message);
+            }
+        }
+    }
+}
+</script>
+{% endblock %}
